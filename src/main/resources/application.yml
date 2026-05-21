@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: deliverymanapp
+  datasource:
+    url: jdbc:sqlserver://92.205.107.156:1433;databaseName=Edge_POS_Server;encrypt=true;trustServerCertificate=true
+    username: Mobile_App_User
+    password: P@ssw0rd_For_MobileApp
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServerDialect
+
+jwt:
+  # Base64 encoded HS256 secret keys (must be at least 256 bits / 32 bytes)
+  # Below are example keys representing "secret-key-must-be-at-least-256-bits-for-hmac-sha-256"
+  secret: c2VjcmV0LWtleS1tdXN0LWJlLWF0LWxlYXN0LTI1Ni1iaXRzLWZvci1obWFjLXNoYS0yNTY=
+  access-token-expiration: 900000 # 15 minutes in milliseconds
+  refresh-token-expiration: 2592000000 # 30 days in milliseconds
