@@ -54,4 +54,44 @@ public class ReportServiceImpl implements ReportService {
             return val != null ? val : BigDecimal.ZERO;
         }
     }
+
+    @Override
+    public List<com.deliveryman.deliverymanapp.reports.dto.BranchDto> getBranches() {
+        String sql = "SELECT Code, NameA FROM vb_Coding_Store";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> 
+            com.deliveryman.deliverymanapp.reports.dto.BranchDto.builder()
+                .code(rs.getInt("Code"))
+                .nameA(rs.getString("NameA"))
+                .build()
+        );
+    }
+
+    @Override
+    public List<com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRowDto> getSalesByProductReport(
+            com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRequest request) {
+        String sql = "EXEC [upr_POS_SalesReport_Products] ?, ?, ?, ?";
+        return jdbcTemplate.query(sql, new SalesByProductReportRowMapper(),
+                request.getStoreCode(),
+                request.getFromDate(),
+                request.getToDate(),
+                request.getCount());
+    }
+
+    private static class SalesByProductReportRowMapper implements RowMapper<com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRowDto> {
+        @Override
+        public com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRowDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRowDto.builder()
+                    .storeNameA(rs.getString("Store_NameA"))
+                    .productNameA(rs.getString("Product_NameA"))
+                    .qty(getBigDecimalSafe(rs, "Qty"))
+                    .sales(getBigDecimalSafe(rs, "Sales"))
+                    .p(getBigDecimalSafe(rs, "P"))
+                    .build();
+        }
+
+        private BigDecimal getBigDecimalSafe(ResultSet rs, String col) throws SQLException {
+            BigDecimal val = rs.getBigDecimal(col);
+            return val != null ? val : BigDecimal.ZERO;
+        }
+    }
 }

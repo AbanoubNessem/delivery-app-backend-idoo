@@ -39,4 +39,26 @@ public class ReportController {
         List<SalesReportRowDto> data = reportService.getSalesReport(request);
         return ResponseEntity.ok(ApiResponse.success(data, "Sales report retrieved successfully"));
     }
+
+    /**
+     * GET Branches List
+     */
+    @GetMapping("/branches")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<List<com.deliveryman.deliverymanapp.reports.dto.BranchDto>>> getBranches() {
+        List<com.deliveryman.deliverymanapp.reports.dto.BranchDto> data = reportService.getBranches();
+        return ResponseEntity.ok(ApiResponse.success(data, "Branches retrieved successfully"));
+    }
+
+    /**
+     * POST Sales By Product Report
+     */
+    @PostMapping("/pos/sales-by-product")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<List<com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRowDto>>> getSalesByProductReport(
+            @Valid @RequestBody com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRequest request
+    ) {
+        List<com.deliveryman.deliverymanapp.reports.dto.SalesByProductReportRowDto> data = reportService.getSalesByProductReport(request);
+        return ResponseEntity.ok(ApiResponse.success(data, "Sales by product report retrieved successfully"));
+    }
 }
